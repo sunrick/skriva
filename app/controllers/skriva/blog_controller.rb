@@ -2,12 +2,11 @@ module Skriva
   class BlogController < ApplicationController
 
     def index
-      @files = Dir[Rails.root.join('app', 'posts', "*.md")]
-      @files.map! { |file| File.basename(file).gsub('.md', '') }
+      @posts = Skriva::Post.all
     end
 
     def show
-      @parser = Parser.new(slug: params[:slug])
+      @post = Skriva::Post.new(slug: params[:slug])
     end
 
   end

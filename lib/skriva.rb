@@ -1,4 +1,6 @@
 require "skriva/engine"
+require "skriva/html"
+require "skriva/post"
 
 module Skriva
 
