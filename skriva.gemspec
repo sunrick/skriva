@@ -9,14 +9,18 @@ Gem::Specification.new do |s|
   s.version     = Skriva::VERSION
   s.authors     = ["Rickard Sunden"]
   s.email       = ["rickard.sunden@outlook.com"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Skriva."
-  s.description = "TODO: Description of Skriva."
+  s.homepage    = "https://github.com/sunrick/skriva"
+  s.summary     = "Static blog implementation for developers."
+  s.description = "Static blog implementation for developers that uses markdown."
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "rails", "~> 5.0.2"
+  s.add_dependency "redcarpet", "~> 3.4.0"
+  s.add_dependency "rouge", "~> 2.0.7"
 
   s.add_development_dependency "sqlite3"
+  s.add_development_dependency "pry"
+
 end
