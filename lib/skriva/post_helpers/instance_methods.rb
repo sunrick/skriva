@@ -12,6 +12,7 @@ module Skriva
 
       def headers
         @headers ||= begin
+          hash_headers = {}
           headers = lines[0..content_start].select do |line|
             line.chomp.present?
           end
@@ -19,10 +20,12 @@ module Skriva
             colon = header.index(":")
             key = header[0..colon - 1].strip
             value = header[colon + 1..-1].strip
+            hash_headers[key] = value
             define_singleton_method "#{key}" do
               value
             end
           end
+          hash_headers
         end
       end
 
