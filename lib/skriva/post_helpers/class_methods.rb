@@ -3,13 +3,21 @@ module Skriva
     module ClassMethods
 
       def all
-        @@posts ||= files.map { |file| File.basename(file).gsub('.md', '') }
+        if Rails.env.production?
+          @@posts ||= files.map { |file| File.basename(file).gsub('.md', '') }
+        else
+          files.map { |file| File.basename(file).gsub('.md', '') }
+        end
       end
 
       private
 
         def files
-          @@files ||= Dir[Rails.root.join('app', 'views', 'skriva', 'posts', "*.md")]
+          if Rails.env.production?
+            @@files ||= Dir[Rails.root.join('app', 'views', 'skriva', 'posts', "*.md")]
+          else
+            Dir[Rails.root.join('app', 'views', 'skriva', 'posts', "*.md")]
+          end
         end
 
     end
