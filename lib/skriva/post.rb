@@ -5,6 +5,5 @@ module Skriva
   class Post
     include Skriva::PostHelpers::InstanceMethods
     extend Skriva::PostHelpers::ClassMethods
-
   end
 end
