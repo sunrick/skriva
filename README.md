@@ -1,28 +1,9 @@
 # Skriva
 Short description and motivation.
 
-## Usage
-How to use my plugin.
+# Wiki
 
-## Installation
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'skriva'
-```
-
-And then execute:
-```bash
-$ bundle
-```
-
-Or install it yourself as:
-```bash
-$ gem install skriva
-```
-
-## Contributing
-Contribution directions go here.
+Check out our [wiki](https://github.com/sunrick/skriva/wiki) for installation, usage and other directions.
 
 ## License
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
