@@ -7,26 +7,30 @@ module Skriva
       end
 
       def tags
+        values_for(key: :tags)
+      end
+
+      def values_for(key:)
         if Rails.env.production?
-          @@tags ||= get_tags
+          @@values_for ||= get_values_for(key: key)
         else
-          get_tags
+          get_values_for(key: key)
         end
       end
 
-      def where(tags: [])
-        tags = if tags.is_a? String
-          tags.split(',').map(&:strip)
-        elsif tags.is_a? Integer
-          tags.to_s
+      def where(key:, values: [])
+        values = if values.is_a? String
+          values.split(',').map(&:strip)
+        elsif values.is_a? Integer
+          values.to_s
         end
-        tags = [tags].flatten.uniq.compact
-        if tags.empty?
+        values = [values].flatten.uniq.compact
+        if values.empty?
           posts
         else
           posts.select do |post|
-            if post.respond_to?(:tags)
-              tags.any? { |tag| post.tags =~ /#{Regexp.quote(tag)}/ }
+            if post.respond_to?(key)
+              values.any? { |value| post.send(key) =~ /#{Regexp.quote(value)}/ }
             end
           end
         end
@@ -42,10 +46,10 @@ module Skriva
 
       private
 
-        def get_tags
+        def get_values_for(key:)
           posts.map do |post|
-            if post.respond_to?(:tags)
-              post.tags.split(',').map(&:strip)
+            if post.respond_to?(key)
+              post.send(key).split(',').map(&:strip)
             end
           end.flatten.uniq.sort
         end

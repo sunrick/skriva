@@ -5,7 +5,7 @@ module Skriva
       if params[:tags].blank?
         @posts = Skriva::Post.all
       else
-        @posts = Skriva::Post.where(tags: params[:tags])
+        @posts = Skriva::Post.where(key: :tags, values: params[:tags])
       end
     end
 
