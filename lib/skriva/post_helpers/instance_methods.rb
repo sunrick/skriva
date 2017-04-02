@@ -22,7 +22,15 @@ module Skriva
             value = header[colon + 1..-1].strip
             hash_headers[key] = value
             define_singleton_method "#{key}" do
-              value
+              if "#{value.first}" + "#{value.last}" == "[]"
+                value.split(",").map do |element|
+                  element[0] = "" if element[0] == "["
+                  element[-1] = "" if element[-1] == "]"
+                  element.strip
+                end
+              else
+                value
+              end
             end
           end
           hash_headers

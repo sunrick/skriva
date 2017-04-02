@@ -6,18 +6,6 @@ module Skriva
         posts
       end
 
-      def tags
-        values_for(key: :tags)
-      end
-
-      def values_for(key:)
-        if Rails.env.production?
-          @@values_for ||= get_values_for(key: key)
-        else
-          get_values_for(key: key)
-        end
-      end
-
       def where(key:, values: [])
         values = if values.is_a? String
           values.split(',').map(&:strip)
@@ -44,14 +32,55 @@ module Skriva
         end
       end
 
+      def headers
+        if Rails.env.production?
+          @@headers ||= get_headers
+        else
+          get_headers
+        end
+      end
+
+      def method_missing(method_name, *arguments, &block)
+        if method_name.to_s.include?("breakdown")
+          name = headers.detect { |header| header.pluralize == method_name.to_s.gsub("_breakdown", "") }
+          if name
+            get_breakdown_for(key: name)
+          else
+            super
+          end
+        else
+          name = headers.detect { |header| header.pluralize == method_name.to_s }
+          if name
+            get_values_for(key: name)
+          else
+            super
+          end
+        end
+      end
+
       private
 
-        def get_values_for(key:)
+        def get_headers
           posts.map do |post|
+            headers = post.headers.keys
+            post.clear_lines
+            headers
+          end.flatten.uniq.compact
+        end
+
+        def get_values_for(key:)
+          values = posts.map do |post|
             if post.respond_to?(key)
-              post.send(key).split(',').map(&:strip)
+              post.send(key)
             end
-          end.flatten.uniq.sort
+          end.flatten.sort
+        end
+
+        def get_breakdown_for(key:)
+          hash = Hash.new(0) # default keys to 0
+          values = get_values_for(key: key)
+          values.each { |v| hash[v] += 1 }
+          hash
         end
 
         def get_posts
