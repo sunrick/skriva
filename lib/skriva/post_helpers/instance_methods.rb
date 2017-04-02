@@ -30,7 +30,7 @@ module Skriva
       end
 
       def content
-        lines[content_start..-1]
+        lines[content_start + 1..-1]
       end
 
       def html
