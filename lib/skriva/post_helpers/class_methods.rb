@@ -32,7 +32,6 @@ module Skriva
         end
       end
 
-
       def posts
         if Rails.env.production?
           @@posts ||= get_posts

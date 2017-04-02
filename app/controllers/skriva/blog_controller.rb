@@ -5,7 +5,6 @@ module Skriva
       if params[:tags].blank?
         @posts = Skriva::Post.all
       else
-        binding.pry
         @posts = Skriva::Post.where(tags: params[:tags])
       end
     end
