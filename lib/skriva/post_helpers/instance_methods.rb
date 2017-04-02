@@ -4,10 +4,10 @@ module Skriva
 
       attr_reader :title, :description, :keywords, :html
 
-      def initialize(slug:)
-        @slug = slug
+      def initialize(file_name:)
+        @file_name = file_name
         @markdown = Redcarpet::Markdown.new(Skriva::HTML, fenced_code_blocks: true)
-        setup
+        headers
       end
 
       def headers
@@ -41,32 +41,36 @@ module Skriva
         end
       end
 
+      def clear_lines
+        @lines = nil
+        self
+      end
+
       private
 
         def lines
-          @lines ||= File.readlines(Rails.root.join('app', 'views', 'skriva', 'posts', "#{parse_slug}.md"))
+          @lines ||= File.readlines(Rails.root.join('app', 'views', 'skriva', 'posts', "#{parse_file_name}.md"))
         end
 
-        def setup
-          headers
-          content
+        def parse_file_name
+          @file_name
+        end
+
+        def separator
+          "{{ skriva }}"
         end
 
         def content_start
           @content_start ||= begin
             start = nil
             @lines.each_with_index do |line, index|
-              if line.include?("{{ content }}")
+              if line.include?(separator)
                 @lines.delete_at(index)
                 start = index
               end
             end
             start
           end
-        end
-
-        def parse_slug
-          @slug
         end
 
     end
