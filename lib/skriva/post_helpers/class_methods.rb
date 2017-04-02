@@ -3,23 +3,18 @@ module Skriva
     module ClassMethods
 
       def all
+        posts
+      end
+
+      def tags
         if Rails.env.production?
-          @@posts ||= files.map do |file|
-            file_name = File.basename(file).gsub('.md', '')
-            post = Post.new(lines: file_name)
-            post.clear_lines
-          end
+          @@tags ||= get_tags
         else
-          @@posts = files.map do |file|
-            file_name = File.basename(file).gsub('.md', '')
-            post = Post.new(file_name: file_name)
-            post.clear_lines
-          end
+          get_tags
         end
       end
 
       def where(tags: [])
-        all
         tags = if tags.is_a? String
           tags.split(',').map(&:strip)
         elsif tags.is_a? Integer
@@ -27,9 +22,9 @@ module Skriva
         end
         tags = [tags].flatten.uniq.compact
         if tags.empty?
-          @@posts
+          posts
         else
-          @@posts.select do |post|
+          posts.select do |post|
             if post.respond_to?(:tags)
               tags.any? { |tag| post.tags =~ /#{Regexp.quote(tag)}/ }
             end
@@ -37,7 +32,32 @@ module Skriva
         end
       end
 
+
+      def posts
+        if Rails.env.production?
+          @@posts ||= get_posts
+        else
+          get_posts
+        end
+      end
+
       private
+
+        def get_tags
+          posts.map do |post|
+            if post.respond_to?(:tags)
+              post.tags.split(',').map(&:strip)
+            end
+          end.flatten.uniq.sort
+        end
+
+        def get_posts
+          files.map do |file|
+            file_name = File.basename(file).gsub('.md', '')
+            post = Post.new(file_name: file_name)
+            post.clear_lines
+          end
+        end
 
         def files
           if Rails.env.production?
