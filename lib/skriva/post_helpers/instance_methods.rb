@@ -21,17 +21,7 @@ module Skriva
             key = header[0..colon - 1].strip
             value = header[colon + 1..-1].strip
             hash_headers[key] = value
-            define_singleton_method "#{key}" do
-              if "#{value.first}" + "#{value.last}" == "[]"
-                value.split(",").map do |element|
-                  element[0] = "" if element[0] == "["
-                  element[-1] = "" if element[-1] == "]"
-                  element.strip
-                end
-              else
-                value
-              end
-            end
+            create_method(key, value)
           end
           hash_headers
         end
@@ -55,6 +45,20 @@ module Skriva
       end
 
       private
+
+        def create_method(key, value)
+          define_singleton_method "#{key}" do
+            if "#{value.first}" + "#{value.last}" == "[]"
+              value.split(",").map do |element|
+                element[0] = "" if element[0] == "["
+                element[-1] = "" if element[-1] == "]"
+                element.strip
+              end
+            else
+              value
+            end
+          end
+        end
 
         def lines
           @lines ||= File.readlines(Rails.root.join('app', 'views', 'skriva', 'posts', "#{parse_file_name}.md"))
