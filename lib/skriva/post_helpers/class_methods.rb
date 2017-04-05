@@ -6,22 +6,29 @@ module Skriva
         posts
       end
 
-      def where(key:, values: [])
-        values = if values.is_a? String
-          values.split(',').map(&:strip)
-        elsif values.is_a? Integer
-          values.to_s
-        end
-        values = [values].flatten.uniq.compact
-        if values.empty?
-          posts
-        else
-          posts.select do |post|
-            if post.respond_to?(key)
-              values.any? { |value| post.send(key) =~ /#{Regexp.quote(value)}/ }
+      def where(options)
+        filtered_posts = posts
+        options.each do |key, values|
+          values = if values.is_a? String
+            values.split(',').map(&:strip)
+          elsif values.is_a? Integer
+            values.to_s
+          end
+          values = [values].flatten.uniq.compact
+          next if values.empty?
+          filtered_posts = filtered_posts.select do |post|
+            next if !post.respond_to?(key)
+            values.any? do |value|
+              post_value = post.send(key)
+              if post_value.is_a? Array
+                value.in? post_value
+              else
+                post_value =~ /\A#{Regexp.quote(value)}\z/
+              end
             end
           end
         end
+        filtered_posts
       end
 
       def posts
