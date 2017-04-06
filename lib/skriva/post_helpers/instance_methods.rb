@@ -61,7 +61,11 @@ module Skriva
         end
 
         def lines
-          @lines ||= File.readlines(Rails.root.join('app', 'views', 'skriva', 'posts', "#{parse_file_name}.md"))
+          begin
+            @lines ||= File.readlines(Rails.root.join('app', 'views', 'skriva', 'posts', "#{parse_file_name}.md"))
+          rescue Errno::ENOENT
+            raise ActionController::RoutingError, 'Not Found'
+          end
         end
 
         def parse_file_name

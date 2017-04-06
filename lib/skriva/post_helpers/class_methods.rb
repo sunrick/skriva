@@ -32,7 +32,7 @@ module Skriva
       end
 
       def posts
-        if Rails.env.production?
+        if cache_posts?
           @@posts ||= get_posts
         else
           get_posts
@@ -40,7 +40,7 @@ module Skriva
       end
 
       def headers
-        if Rails.env.production?
+        if cache_posts?
           @@headers ||= get_headers
         else
           get_headers
@@ -66,6 +66,10 @@ module Skriva
       end
 
       private
+
+        def cache_posts?
+          Rails.env.production?
+        end
 
         def get_headers
           posts.map do |post|
@@ -99,7 +103,7 @@ module Skriva
         end
 
         def files
-          if Rails.env.production?
+          if cache_posts?
             @@files ||= Dir[Rails.root.join('app', 'views', 'skriva', 'posts', "*.md")]
           else
             Dir[Rails.root.join('app', 'views', 'skriva', 'posts', "*.md")]
