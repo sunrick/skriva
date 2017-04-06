@@ -1,4 +1,4 @@
 Skriva::Engine.routes.draw do
-  get '/:slug', to: 'blog#show'
-  get '/', to: 'blog#index'
+  get '/:slug', to: 'posts#show', as: :post
+  get '/', to: 'posts#index', as: :posts
 end

@@ -1,5 +1,5 @@
 module Skriva
-  class BlogController < ApplicationController
+  class PostsController < ApplicationController
 
     def index
       if params[:tags].blank?
