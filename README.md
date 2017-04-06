@@ -1,5 +1,5 @@
 # Skriva
-Skriva (Skreeeeeva) is a barebones static blog Rails engine. Drop markdown files in a folder and have each accessible as their own individual route. Inspired by the jekyll and high voltage gems.
+Skriva (Skreeeeeva) is a barebones static blog Rails engine. Drop markdown files in a folder and have each file accessible with its own individual route. Inspired by the jekyll and high voltage gems.
 
 # Wiki
 
