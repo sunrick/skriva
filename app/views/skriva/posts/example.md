@@ -17,6 +17,6 @@ end
 ```
 
 ```javascript
-# javascript code block
+// javascript code block
 console.log('hi!')
 ```
